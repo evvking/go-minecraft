@@ -6,7 +6,6 @@ import (
 )
 
 type LaunchApp struct {
-	Version   string
 	VersionID int
 }
 

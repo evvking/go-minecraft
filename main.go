@@ -6,8 +6,9 @@ import (
 	"log"
 	"os"
 
-	"minecraft/launcher"
-	commandline "minecraft/libraries"
+	"minecraft/libraries/commandline"
+	"minecraft/libraries/launcher"
+	"minecraft/libraries/world"
 )
 
 func main() {
@@ -15,15 +16,15 @@ func main() {
 	fmt.Println("\nSelected version: 1.0 (Inital Release)")
 
 	var launcherApp launcher.LaunchApp = launcher.LaunchApp{
-		Version:   "1.0",
 		VersionID: 1,
 	}
 
 	var commandLine commandline.CommandLine
+	var cmd string
 
 LaunchCommandLine:
 	for {
-		var cmd string = commandLine.Input()
+		cmd = commandLine.Input()
 		// FIXME: Rozbijanie na CommandSplit nie działa (błąd przy [case "versionlist"]), błąd tablic
 
 		switch cmd {
@@ -45,6 +46,27 @@ LaunchCommandLine:
 			if err := scanner.Err(); err != nil {
 				log.Fatal(err)
 			}
+		case "versionselect":
+			fmt.Print("Enter Version ID: ")
+			fmt.Scanln(&launcherApp.VersionID)
+		}
+	}
+
+	fmt.Println("\nWorlds Manager")
+
+	var world = world.World{}
+WorldsManager:
+	for {
+		cmd = commandLine.Input()
+
+		switch cmd {
+		case "worldcreate":
+			fmt.Print("Enter world name: ")
+			fmt.Scanln(&world.Name)
+
+			world.Make()
+			world.Print()
+			break WorldsManager
 		}
 	}
 }
